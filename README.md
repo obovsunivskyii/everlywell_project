@@ -14,6 +14,28 @@ This project demonstrates a comprehensive QA automation approach for testing a v
 - ✅ Custom Cypress commands for reusability
 - ✅ Admin panel for discount configuration
 - ✅ Comprehensive documentation
+- ✅ CI/CD pipeline with GitHub Actions
+
+---
+
+## CI/CD Integration
+
+This project includes automated continuous integration and deployment pipeline using **GitHub Actions** as the primary framework.
+
+**Workflow Configuration:** `.github/workflows/cypress-tests.yml`
+
+**Automated Testing Pipeline:**
+- Triggers on push/pull requests to main branches
+- Automated test execution in isolated environment
+- Mock server setup and teardown
+- Artifact collection (videos and screenshots)
+- Test results reporting
+
+**CI/CD Benefits:**
+- Ensures test suite runs on every code change
+- Validates functionality across different environments
+- Provides immediate feedback on test failures
+- Maintains code quality and test stability
 
 ---
 
