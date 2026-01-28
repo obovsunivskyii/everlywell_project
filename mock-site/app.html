@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EverlyWell - Volume Discount Test Environment</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .cart-icon {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2c7a7b;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+
+    .cart-count {
+      background: #e53e3e;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      font-weight: bold;
+    }
+
+    button, .btn {
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-block;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #2c7a7b;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #234e4f;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .product-info {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .product-image {
+      width: 120px;
+      height: 120px;
+      background: #e0e0e0;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+
+    .product-price {
+      font-size: 28px;
+      color: #2c7a7b;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    .discount-box {
+      background: #c6f6d5;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      border-left: 4px solid #38a169;
+    }
+
+    .discount-box.promo {
+      background: #feebc8;
+      border-left-color: #dd6b20;
+    }
+
+    .discount-title {
+      font-weight: 600;
+      color: #2f855a;
+      margin-bottom: 5px;
+    }
+
+    .promo .discount-title {
+      color: #c05621;
+    }
+
+    .discount-amount {
+      font-size: 24px;
+      font-weight: bold;
+      color: #22543d;
+    }
+
+    .promo .discount-amount {
+      color: #7c2d12;
+    }
+
+    .discount-info {
+      font-size: 14px;
+      color: #276749;
+      margin-top: 5px;
+    }
+
+    .progress-indicator {
+      background: #bee3f8;
+      padding: 12px;
+      border-radius: 8px;
+      margin: 15px 0;
+      text-align: center;
+      font-weight: 600;
+      color: #2c5282;
+    }
+
+    .order-summary {
+      margin-top: 20px;
+      padding: 20px;
+      background: #f7fafc;
+      border-radius: 8px;
+    }
+
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .summary-line.total {
+      font-size: 24px;
+      font-weight: bold;
+      border-bottom: none;
+      margin-top: 10px;
+      color: #2c7a7b;
+    }
+
+    .admin-header {
+      background: #2d3748;
+      color: white;
+      padding: 20px;
+      margin: -20px -20px 20px -20px;
+      border-radius: 8px 8px 0 0;
+    }
+
+    .logout-link {
+      float: right;
+      color: #90cdf4;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .success-message {
+      background: #c6f6d5;
+      color: #22543d;
+      padding: 15px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      border-left: 4px solid #38a169;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .text-muted {
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .mt-20 {
+      margin-top: 20px;
+    }
+
+    .info-box {
+      background: #ebf8ff;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    .nav-links {
+      margin-bottom: 20px;
+    }
+
+    .nav-links a {
+      margin-right: 15px;
+      color: #2c7a7b;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="cart-icon hidden" data-cy="cart-icon" id="cartIcon">
+    🛒 Cart <span class="cart-count" data-cy="cart-item-count">0</span>
+  </div>
+
+  <div class="container" id="app">
+  </div>
+
+  <script>
+
+    function loadDiscountSettings() {
+      const saved = localStorage.getItem('discountSettings');
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error('Failed to load discount settings from localStorage', e);
+        }
+      }
+      return {
+        threshold: 5,
+        enabled: true,
+        type: 'fixed',
+        value: 1
+      };
+    }
+
+    const STATE = {
+      currentPage: 'home',
+      cart: {
+        quantity: 0,
+        productId: 'test-kit-standard'
+      },
+      product: {
+        id: 'test-kit-standard',
+        name: 'Standard Health Test Kit',
+        price: 49.99,
+        sku: 'TEST-STD-001'
+      },
+      discount: loadDiscountSettings(),
+      promo: {
+        code: null,
+        discount: 0
+      },
+      admin: {
+        isLoggedIn: false,
+        username: 'admin@everlywell.com',
+        password: 'admin123'
+      }
+    };
+
+    const PROMO_CODES = {
+      'SAVE10': { type: 'percentage', value: 0.10, description: '10% off' },
+      'SAVE20': { type: 'percentage', value: 0.20, description: '20% off' },
+      'SAVE30': { type: 'percentage', value: 0.30, description: '30% off' },
+      'SAVE25': { type: 'fixed', value: 25, description: '$25 off' }
+    };
+
+    function navigate(page) {
+      STATE.currentPage = page;
+
+      let url = '/';
+      if (page === 'home' || page === '') {
+        url = '/';
+      } else if (page === 'admin-dashboard') {
+        url = '/admin/dashboard';
+      } else if (page === 'admin-login') {
+        url = '/admin/login';
+      } else if (page === 'admin-settings') {
+        url = '/admin/discount-settings';
+      } else if (page === 'checkout') {
+        url = '/checkout';
+      } else {
+        url = `/${page}`;
+      }
+
+      window.history.pushState({}, '', url);
+      render();
+    }
+
+    function getCurrentPage() {
+      const path = window.location.pathname;
+      if (path === '/' || path === '') return 'home';
+      if (path === '/checkout') return 'checkout';
+      if (path === '/admin/login') return 'admin-login';
+      if (path === '/admin/discount-settings') return 'admin-settings';
+      if (path === '/admin/dashboard') return 'admin-dashboard';
+      return 'home';
+    }
+
+    function calculateDiscounts() {
+      const quantity = STATE.cart.quantity;
+      const price = STATE.product.price;
+      const subtotal = price * quantity;
+
+      let volumeDiscount = 0;
+      let promoDiscount = 0;
+
+      if (STATE.discount.enabled && quantity >= STATE.discount.threshold) {
+        if (STATE.discount.type === 'fixed') {
+          volumeDiscount = price * STATE.discount.value;
+        } else if (STATE.discount.type === 'percentage') {
+          volumeDiscount = subtotal * (STATE.discount.value / 100);
+        }
+      }
+
+      if (STATE.promo.code && PROMO_CODES[STATE.promo.code]) {
+        const promo = PROMO_CODES[STATE.promo.code];
+        if (promo.type === 'percentage') {
+          promoDiscount = subtotal * promo.value;
+        } else if (promo.type === 'fixed') {
+          promoDiscount = promo.value;
+        }
+      }
+
+      let appliedDiscount = 0;
+      let discountType = 'none';
+
+      if (volumeDiscount > 0 && promoDiscount === 0) {
+        appliedDiscount = volumeDiscount;
+        discountType = 'volume';
+      } else if (promoDiscount > 0 && volumeDiscount === 0) {
+        appliedDiscount = promoDiscount;
+        discountType = 'promo';
+      } else if (volumeDiscount > 0 && promoDiscount > 0) {
+        if (volumeDiscount >= promoDiscount) {
+          appliedDiscount = volumeDiscount;
+          discountType = 'volume-better';
+        } else {
+          appliedDiscount = promoDiscount;
+          discountType = 'promo';
+        }
+      }
+
+      return {
+        subtotal,
+        volumeDiscount,
+        promoDiscount,
+        appliedDiscount,
+        discountType,
+        total: subtotal - appliedDiscount
+      };
+    }
+
+    function renderHomePage() {
+      const showCart = STATE.cart.quantity > 0;
+
+      return `
+        <div class="card">
+          <h1>EverlyWell Health Tests</h1>
+          <div class="product-info">
+            <div class="product-image">🧪</div>
+            <div>
+              <h2>${STATE.product.name}</h2>
+              <div class="product-price" data-cy="product-price">$${STATE.product.price.toFixed(2)}</div>
+              <p class="text-muted">SKU: ${STATE.product.sku}</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input
+              type="number"
+              id="quantity"
+              data-cy="quantity-input"
+              value="1"
+              min="1"
+              max="20"
+              style="width: 100px; display: inline-block; margin-right: 10px;"
+            />
+            <button class="btn-primary" data-cy="add-to-cart-button" onclick="addToCart()">
+              Add to Cart
+            </button>
+          </div>
+
+          <div class="info-box">
+            <strong>💡 Volume Discount:</strong> Buy ${STATE.discount.threshold} or more, get 1 free!
+          </div>
+
+          <div class="nav-links mt-20">
+            <a href="/admin/login" onclick="event.preventDefault(); navigate('admin-login')">Admin Login</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCheckoutPage() {
+      const calc = calculateDiscounts();
+      const quantity = STATE.cart.quantity;
+      const threshold = STATE.discount.threshold;
+      const itemsNeeded = threshold - quantity;
+
+      return `
+        <div class="card" data-cy="checkout-container">
+          <h2>Checkout</h2>
+
+          <div class="form-group">
+            <label>Update Quantity:</label>
+            <input
+              type="number"
+              data-cy="item-quantity"
+              value="${quantity}"
+              min="0"
+              max="20"
+              style="width: 100px; display: inline-block; margin-right: 10px;"
+            />
+            <button class="btn-secondary" data-cy="update-cart" onclick="updateCartQuantity()">
+              Update
+            </button>
+            <button class="btn-secondary" data-cy="continue-shopping" onclick="navigate('home')" style="margin-left: 10px;">
+              Continue Shopping
+            </button>
+          </div>
+
+          ${quantity > 0 && quantity < threshold ? `
+            <div class="progress-indicator" data-cy="volume-discount-progress">
+              Add ${itemsNeeded} more to save $${STATE.product.price.toFixed(2)}!
+            </div>
+          ` : ''}
+
+          ${calc.discountType === 'volume' || calc.discountType === 'volume-better' ? `
+            <div class="discount-box" data-cy="volume-discount" role="status" aria-label="Volume discount applied">
+              <div class="discount-title" data-cy="volume-discount-info">
+                🎉 Volume Discount Applied
+              </div>
+              <div class="discount-amount">
+                -$<span data-cy="volume-discount-amount">${calc.volumeDiscount.toFixed(2)}</span>
+              </div>
+              <div class="discount-info">Buy ${threshold}, save on 1</div>
+            </div>
+          ` : ''}
+
+          <div class="card" style="background: #f7fafc; margin: 20px 0;">
+            <h3>Have a Promo Code?</h3>
+            <div class="form-group">
+              <input
+                type="text"
+                data-cy="promo-code-input"
+                placeholder="Enter promo code"
+                style="display: inline-block; margin-right: 10px;"
+                value="${STATE.promo.code || ''}"
+              />
+              <button class="btn-primary" data-cy="apply-promo-button" onclick="applyPromoCode()">
+                Apply
+              </button>
+              ${STATE.promo.code ? `
+                <button class="btn-secondary" data-cy="remove-promo-button" onclick="removePromoCode()" style="margin-left: 10px;">
+                  Remove
+                </button>
+              ` : ''}
+            </div>
+            <div class="text-muted" data-cy="promo-code-status" style="margin-top: 10px;">
+              ${calc.discountType === 'volume-better' ? '💡 Volume discount provides better savings' : ''}
+            </div>
+          </div>
+
+          ${calc.discountType === 'promo' ? `
+            <div class="discount-box promo" data-cy="promo-discount">
+              <div class="discount-title">
+                🏷️ Promo Code Discount (${STATE.promo.code})
+              </div>
+              <div class="discount-amount">
+                -$<span data-cy="promo-discount-amount">${calc.promoDiscount.toFixed(2)}</span>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="order-summary">
+            <div class="summary-line">
+              <span>Subtotal:</span>
+              <span>$<span data-cy="order-subtotal">${calc.subtotal.toFixed(2)}</span></span>
+            </div>
+            ${calc.appliedDiscount > 0 ? `
+              <div class="summary-line">
+                <span>Discount:</span>
+                <span style="color: #38a169;">-$<span data-cy="total-discounts">${calc.appliedDiscount.toFixed(2)}</span></span>
+              </div>
+            ` : ''}
+            <div class="summary-line total">
+              <span>Total:</span>
+              <span>$<span data-cy="order-total">${calc.total.toFixed(2)}</span></span>
+            </div>
+          </div>
+
+          <button class="btn-primary mt-20" style="width: 100%;">
+            Place Order
+          </button>
+        </div>
+      `;
+    }
+
+    function renderAdminLoginPage() {
+      return `
+        <div class="card">
+          <h2>Admin Login</h2>
+          <form onsubmit="event.preventDefault(); adminLogin();">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input
+                type="text"
+                id="username"
+                data-cy="username-input"
+                placeholder="admin@everlywell.com"
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input
+                type="password"
+                id="password"
+                data-cy="password-input"
+                placeholder="admin123"
+              />
+            </div>
+            <button type="submit" class="btn-primary" data-cy="login-button">
+              Login
+            </button>
+            <button type="button" class="btn-secondary" onclick="navigate('home')" style="margin-left: 10px;">
+              Back to Store
+            </button>
+          </form>
+          <div class="info-box mt-20">
+            <strong>Test Credentials:</strong><br>
+            Username: admin@everlywell.com<br>
+            Password: admin123
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAdminDashboard() {
+      if (!STATE.admin.isLoggedIn) {
+        navigate('admin-login');
+        return '';
+      }
+
+      return `
+        <div class="card" data-cy="admin-panel">
+          <div class="admin-header">
+            <h2 style="display: inline-block; margin: 0;">Admin Dashboard</h2>
+            <span class="logout-link" onclick="adminLogout()">Logout</span>
+          </div>
+
+          <div class="nav-links">
+            <a href="/admin/discount-settings" onclick="event.preventDefault(); navigate('admin-settings')">
+              Discount Settings
+            </a>
+          </div>
+
+          <p>Welcome to the admin panel. Use the navigation above to manage settings.</p>
+        </div>
+      `;
+    }
+
+    function renderAdminSettings() {
+      if (!STATE.admin.isLoggedIn) {
+        navigate('admin-login');
+        return '';
+      }
+
+      return `
+        <div class="card" data-cy="discount-settings-panel">
+          <div class="admin-header">
+            <h2 style="display: inline-block; margin: 0;">Discount Settings</h2>
+            <span class="logout-link" onclick="adminLogout()">Logout</span>
+          </div>
+
+          <div class="nav-links">
+            <a href="/admin/dashboard" onclick="event.preventDefault(); navigate('admin-dashboard')">
+              ← Back to Dashboard
+            </a>
+          </div>
+
+          <div id="saveMessage"></div>
+
+          <div class="settings-grid">
+            <div class="form-group">
+              <label for="threshold">Volume Threshold:</label>
+              <input
+                type="number"
+                id="threshold"
+                data-cy="volume-threshold-input"
+                value="${STATE.discount.threshold}"
+                min="1"
+                max="20"
+              />
+              <small class="text-muted">Number of items required for volume discount</small>
+            </div>
+
+            <div class="form-group">
+              <label for="discountType">Discount Type:</label>
+              <select id="discountType" data-cy="discount-type">
+                <option value="fixed" ${STATE.discount.type === 'fixed' ? 'selected' : ''}>
+                  Fixed (1 item free)
+                </option>
+                <option value="percentage" ${STATE.discount.type === 'percentage' ? 'selected' : ''}>
+                  Percentage
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="discountValue">Discount Value:</label>
+              <input
+                type="number"
+                id="discountValue"
+                data-cy="discount-value"
+                value="${STATE.discount.value}"
+                min="0"
+                step="0.01"
+              />
+              <small class="text-muted">
+                For fixed: number of items free. For percentage: % off
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label>
+                <input
+                  type="checkbox"
+                  id="enabled"
+                  data-cy="volume-discount-enabled"
+                  ${STATE.discount.enabled ? 'checked' : ''}
+                />
+                Enable Volume Discount
+              </label>
+            </div>
+
+            <button class="btn-primary" data-cy="save-discount-settings" onclick="saveDiscountSettings()">
+              Save Settings
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function addToCart() {
+      const qty = parseInt(document.querySelector('[data-cy="quantity-input"]').value);
+      STATE.cart.quantity += qty;
+      updateCartIcon();
+      alert(`Added ${qty} item(s) to cart!`);
+    }
+
+    function updateCartIcon() {
+      document.querySelector('[data-cy="cart-item-count"]').textContent = STATE.cart.quantity;
+
+      if (STATE.cart.quantity > 0) {
+        document.getElementById('cartIcon').classList.remove('hidden');
+      }
+    }
+
+    function goToCheckout() {
+      navigate('checkout');
+    }
+
+    function updateCartQuantity() {
+      const newQty = parseInt(document.querySelector('[data-cy="item-quantity"]').value);
+      STATE.cart.quantity = newQty;
+      updateCartIcon();
+      render();
+    }
+
+    function applyPromoCode() {
+      const code = document.querySelector('[data-cy="promo-code-input"]').value.toUpperCase();
+
+      if (PROMO_CODES[code]) {
+        STATE.promo.code = code;
+        render();
+      } else {
+        alert('Invalid promo code');
+      }
+    }
+
+    function removePromoCode() {
+      STATE.promo.code = null;
+      render();
+    }
+
+    function adminLogin() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (username === STATE.admin.username && password === STATE.admin.password) {
+        STATE.admin.isLoggedIn = true;
+        navigate('admin-dashboard');
+      } else {
+        alert('Invalid credentials');
+      }
+    }
+
+    function adminLogout() {
+      STATE.admin.isLoggedIn = false;
+      navigate('home');
+    }
+
+    function saveDiscountSettings() {
+      STATE.discount.threshold = parseInt(document.getElementById('threshold').value);
+      STATE.discount.type = document.getElementById('discountType').value;
+      STATE.discount.value = parseFloat(document.getElementById('discountValue').value);
+      STATE.discount.enabled = document.getElementById('enabled').checked;
+
+      localStorage.setItem('discountSettings', JSON.stringify(STATE.discount));
+
+      document.getElementById('saveMessage').innerHTML = `
+        <div class="success-message" data-cy="settings-saved-message">
+          ✅ Settings saved successfully!
+        </div>
+      `;
+
+      setTimeout(() => {
+        document.getElementById('saveMessage').innerHTML = '';
+      }, 3000);
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      const cartIcon = document.getElementById('cartIcon');
+
+      let content = '';
+      let showCart = false;
+
+      switch (STATE.currentPage) {
+        case 'home':
+          content = renderHomePage();
+          showCart = true;
+          break;
+        case 'checkout':
+          content = renderCheckoutPage();
+          showCart = true;
+          break;
+        case 'admin-login':
+          content = renderAdminLoginPage();
+          showCart = false;
+          break;
+        case 'admin-dashboard':
+          content = renderAdminDashboard();
+          showCart = false;
+          break;
+        case 'admin-settings':
+          content = renderAdminSettings();
+          showCart = false;
+          break;
+        default:
+          content = renderHomePage();
+          showCart = true;
+      }
+
+      app.innerHTML = content;
+
+      if (showCart) {
+        cartIcon.classList.remove('hidden');
+      } else {
+        cartIcon.classList.add('hidden');
+      }
+
+      updateCartIcon();
+    }
+
+    document.getElementById('cartIcon').addEventListener('click', goToCheckout);
+
+    window.addEventListener('popstate', () => {
+      STATE.currentPage = getCurrentPage();
+      render();
+    });
+
+    STATE.currentPage = getCurrentPage();
+    render();
+  </script>
+</body>
+</html>

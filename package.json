@@ -1,0 +1,22 @@
+{
+  "name": "everly-volume-discount-tests",
+  "version": "1.0.0",
+  "description": "Automated tests for volume-based discount feature",
+  "main": "index.js",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "test": "cypress run --spec 'cypress/e2e/volume-discount.cy.js'"
+  },
+  "keywords": [
+    "cypress",
+    "testing",
+    "e2e",
+    "volume-discount"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.17.0"
+  }
+}
